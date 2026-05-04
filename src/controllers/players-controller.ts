@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as service from '../services/players-services';
 import { noContent } from '../utills/http-helper';
+import { StatisticsModel } from '../models/statitiscs-model';
 
 
 export const getPlayers = async (req: Request, res: Response) => {
@@ -22,3 +23,19 @@ export const postPlayer = async(req: Request, res: Response) => {
     res.status(httpResponse.statuscode).json(httpResponse.body);
   }
 };
+
+export const deletePlayer = async(req: Request, res: Response) =>{
+  const id = parseInt(req.params.id as string);
+  const httpResponse = await service.deletePlayerService(id);
+
+  if(httpResponse){
+    res.status(httpResponse.statuscode).json(httpResponse.body);
+  }
+}
+
+export const updatePlayer = async(req: Request, res: Response) =>{
+  const id = parseInt(req.params.id as string);
+  const bodyValue: StatisticsModel = req.body;
+  const httpResponse = await service.updatePlayerService(id, bodyValue);
+  res.status(httpResponse.statuscode).json(httpResponse.body);
+}
