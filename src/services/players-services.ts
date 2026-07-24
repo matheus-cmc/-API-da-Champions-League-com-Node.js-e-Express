@@ -55,20 +55,11 @@ export const deletePlayerService = async (id: number) =>{
 }
 
 export const updatePlayerService = async (id: number, Statistics: StatisticsModel) =>{
- const data = await PlayerRepository.findandModufyPlayer(id, Statistics);
-let response = null;
-const isdeleted = await PlayerRepository.deleteonePlayer(id);
- if(data){
+  const data = await PlayerRepository.findandModufyPlayer(id, Statistics);
+
+  if(data){
     return await httpResponse.ok(data);
- }else{
-    return await httpResponse.notFound("jogador não encontrado");
- }
+  }
 
- if(isdeleted){
-    response = await httpResponse.ok("jogador atualizado com sucesso");
- }else{
-    response = await httpResponse.notFound("jogador não encontrado");
- }
- 
-
+  return await httpResponse.notFound("jogador não encontrado");
 }

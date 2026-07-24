@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Champions League API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="logo" href="#top">
+      <span class="logo-star" aria-hidden="true">★</span>
+      <span>CHAMPIONS</span>
+    </a>
+    <nav class="nav">
+      <a href="#players">Jogadores</a>
+      <a href="#clubs">Clubes</a>
+      <button type="button" class="nav-cta" id="open-create">Novo jogador</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-ball">
+          <div class="ball-ring"></div>
+          <div class="ball-core"></div>
+        </div>
+      </div>
+      <div class="hero-content">
+        <p class="brand">UEFA Champions League</p>
+        <h1>A elite do futebol europeu, em tempo real</h1>
+        <p class="hero-lead">Explore jogadores, estatísticas e clubes da competição mais cobiçada do planeta.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#players">Ver elenco</a>
+          <a class="btn btn-ghost" href="#clubs">Ver clubes</a>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <span></span>
+      </div>
+    </section>
+
+    <section class="section players-section" id="players">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Elenco</p>
+          <h2>Jogadores em campo</h2>
+          <p class="section-desc">Filtre, busque e gerencie o plantel conectado à API.</p>
+        </div>
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr-only">Buscar jogador</span>
+            <input type="search" id="search" placeholder="Buscar por nome, clube..." autocomplete="off" />
+          </label>
+          <select id="filter-position" aria-label="Filtrar por posição">
+            <option value="">Todas posições</option>
+            <option value="ST">ST</option>
+            <option value="LW">LW</option>
+            <option value="RW">RW</option>
+            <option value="CM">CM</option>
+            <option value="CAM">CAM</option>
+            <option value="CB">CB</option>
+            <option value="GK">GK</option>
+          </select>
+          <select id="filter-club" aria-label="Filtrar por clube">
+            <option value="">Todos clubes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats-strip" id="stats-strip" aria-live="polite"></div>
+      <div class="players-grid" id="players-grid"></div>
+      <p class="empty-state hidden" id="players-empty">Nenhum jogador encontrado com esses filtros.</p>
+    </section>
+
+    <section class="section clubs-section" id="clubs">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Competição</p>
+          <h2>Clubes da Champions</h2>
+          <p class="section-desc">Os gigantes europeus que disputam a glória continental.</p>
+        </div>
+      </div>
+      <div class="clubs-marquee" id="clubs-track" aria-label="Lista de clubes"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Champions League API · Node.js & Express</p>
+  </footer>
+
+  <!-- Detail drawer -->
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-backdrop" data-close></div>
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <button type="button" class="drawer-close" data-close aria-label="Fechar">×</button>
+      <div id="drawer-content"></div>
+    </div>
+  </aside>
+
+  <!-- Create modal -->
+  <div class="modal" id="create-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="create-title">
+      <button type="button" class="drawer-close" data-close-modal aria-label="Fechar">×</button>
+      <h2 id="create-title">Novo jogador</h2>
+      <form id="create-form" class="form">
+        <div class="form-row">
+          <label>Nome<input name="name" required placeholder="Ex: Lamine Yamal" /></label>
+          <label>Posição
+            <select name="position" required>
+              <option value="ST">ST</option>
+              <option value="LW">LW</option>
+              <option value="RW">RW</option>
+              <option value="CM">CM</option>
+              <option value="CAM">CAM</option>
+              <option value="CB">CB</option>
+              <option value="GK">GK</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Clube
+            <select name="club" id="create-club" required></select>
+          </label>
+          <label>Nacionalidade<input name="nationality" required placeholder="Ex: Spain" /></label>
+        </div>
+        <fieldset>
+          <legend>Estatísticas</legend>
+          <div class="stats-inputs">
+            <label>OVR<input type="number" name="overall" min="1" max="99" value="80" required /></label>
+            <label>PAC<input type="number" name="pace" min="1" max="99" value="80" required /></label>
+            <label>SHO<input type="number" name="shooting" min="1" max="99" value="80" required /></label>
+            <label>PAS<input type="number" name="passing" min="1" max="99" value="80" required /></label>
+            <label>DRI<input type="number" name="dribbling" min="1" max="99" value="80" required /></label>
+            <label>DEF<input type="number" name="defending" min="1" max="99" value="50" required /></label>
+            <label>PHY<input type="number" name="physical" min="1" max="99" value="75" required /></label>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary btn-full">Adicionar ao elenco</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

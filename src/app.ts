@@ -1,18 +1,17 @@
-import express, { Request, Response } from "express";
-import router from "./routes";
+import express from "express";
+import path from "path";
 import cors from "cors";
+import router from "./routes";
 
 function createApp() {
   const app = express();
 
+  app.use(cors());
   app.use(express.json());
   app.use("/api", router);
 
-  const corsOptions = {
-    origin: "http://localhost:3000", // Substitua pelo domínio do seu frontend
-    methods: ["GET"]
-  }
-  app.use(cors());
+  const publicPath = path.join(__dirname, "..", "public");
+  app.use(express.static(publicPath));
 
   return app;
 }
